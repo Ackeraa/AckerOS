@@ -3,6 +3,7 @@ ASPARAMS = --32
 LDPARAMS = -melf_i386
 
 objects = obj/loader.o \
+		  obj/gdt.o \
           obj/kernel.o
 
 run: kernel.iso
@@ -29,7 +30,7 @@ kernel.iso: kernel.bin
 	echo 'set default=0'                     >> iso/boot/grub/grub.cfg
 	echo ''                                  >> iso/boot/grub/grub.cfg
 	echo 'menuentry "My Operating System" {' >> iso/boot/grub/grub.cfg
-	echo '  multiboot /boot/kernel.bin'    >> iso/boot/grub/grub.cfg
+	echo '  multiboot /boot/kernel.bin'      >> iso/boot/grub/grub.cfg
 	echo '  boot'                            >> iso/boot/grub/grub.cfg
 	echo '}'                                 >> iso/boot/grub/grub.cfg
 	grub-mkrescue --output=kernel.iso iso
