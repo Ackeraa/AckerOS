@@ -4,7 +4,7 @@
 using namespace ackeros;
 using namespace ackeros::common;
 
-void printf(char* str) {
+void printf(const char* str) {
     uint16_t* VideoMemory = (uint16_t*)0xb8000;
 
     static uint8_t x = 0, y = 0;

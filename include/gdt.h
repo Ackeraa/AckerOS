@@ -1,5 +1,5 @@
-#ifndef __ACKEROS__GDT_H
-#define __ACKEROS__GDT_H
+#ifndef ACKEROS_GDT_H_
+#define ACKEROS_GDT_H_
 
 #include <common/types.h>
 

@@ -1,5 +1,5 @@
-#ifndef __ACKEROS__COMMON__TYPES_H
-#define __ACKEROS__COMMON__TYPES_H
+#ifndef ACKEROS_COMMON_TYPES_H_
+#define ACKEROS_COMMON_TYPES_H_
 
 namespace ackeros {
     namespace common {
