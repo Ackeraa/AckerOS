@@ -14,7 +14,8 @@ void Driver::Activate() {
 void Driver::Deactivate() {
 }
 
-void Driver::Reset() {
+int Driver::Reset() {
+    return 0;
 }
 
 DriverManager::DriverManager() {

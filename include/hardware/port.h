@@ -9,7 +9,7 @@ namespace ackeros {
         // FIXME: maybe use template to simplify
         class Port {
             protected:
-                Port(ackeros::common::uint16_t protnumber);
+                Port(ackeros::common::uint16_t portnumber);
                 ~Port();
                 ackeros::common::uint16_t portnumber;
         };
@@ -30,8 +30,8 @@ namespace ackeros {
                     return result;
                 }
 
-                static inline void Write8(ackeros::common::uint16_t _poprt, ackeros::common::uint8_t _data) {
-                    __asm__ volatile("outb %0 %1" : : "a" (_data), "Nd" (_port));
+                static inline void Write8(ackeros::common::uint16_t _port, ackeros::common::uint8_t _data) {
+                    __asm__ volatile("outb %0, %1" : : "a" (_data), "Nd" (_port));
                 }
         };
 
@@ -43,8 +43,8 @@ namespace ackeros {
                 virtual void Write(ackeros::common::uint8_t data);
 
             protected:
-                static inline void Write8Slow(ackeros::common::uint16_t _poprt, ackeros::common::uint8_t _data) {
-                    __asm__ volatile("outb %0 %1\njmp 1f\n1: jpm 1f\n1:" : : "a" (_data), "Nd" (_port));
+                static inline void Write8Slow(ackeros::common::uint16_t _port, ackeros::common::uint8_t _data) {
+                    __asm__ volatile("outb %0, %1\njmp 1f\n1: jmp 1f\n1:" : : "a" (_data), "Nd" (_port));
                 }
         };
 
@@ -64,8 +64,8 @@ namespace ackeros {
                     return result;
                 }
 
-                static inline void Write16(ackeros::common::uint16_t _poprt, ackeros::common::uint16_t _data) {
-                    __asm__ volatile("outw %0 %1" : : "a" (_data), "Nd" (_port));
+                static inline void Write16(ackeros::common::uint16_t _port, ackeros::common::uint16_t _data) {
+                    __asm__ volatile("outw %0, %1" : : "a" (_data), "Nd" (_port));
                 }
         };
 
@@ -85,8 +85,8 @@ namespace ackeros {
                     return result;
                 }
 
-                static inline void Write32(ackeros::common::uint16_t _poprt, ackeros::common::uint32_t _data) {
-                    __asm__ volatile("outl %0 %1" : : "a" (_data), "Nd" (_port));
+                static inline void Write32(ackeros::common::uint16_t _port, ackeros::common::uint32_t _data) {
+                    __asm__ volatile("outl %0, %1" : : "a" (_data), "Nd" (_port));
                 }
         };
     }

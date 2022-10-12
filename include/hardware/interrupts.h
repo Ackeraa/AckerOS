@@ -11,7 +11,7 @@ namespace ackeros {
         
         class InterruptHandler {
             protected:
-                ackerps::common::uint8_t InterruptNumber;
+                ackeros::common::uint8_t InterruptNumber;
                 InterruptManager* interruptManager;
                 
                 InterruptHandler(InterruptManager* interruptManager,
@@ -33,6 +33,7 @@ namespace ackeros {
                     ackeros::common::uint16_t handlerAddressLowBits;
                     ackeros::common::uint16_t gdt_codeSegmentSelector;
                     ackeros::common::uint8_t reserved;
+                    ackeros::common::uint8_t access;
                     ackeros::common::uint16_t handlerAddressHighBits;
                 } __attribute__((packed));
 
@@ -44,8 +45,9 @@ namespace ackeros {
                 } __attribute__((packed));
 
                 ackeros::common::uint16_t hardwareInterruptOffset;
-                static void setInterruptDescriptorTableEntry(ackeros::common::uint8_t interrupt,
-                                                            ackeros::common::uint16_t codeSegmentSelectorOffset, void (*hhandler)(),
+                static void SetInterruptDescriptorTableEntry(ackeros::common::uint8_t interrupt,
+                                                            ackeros::common::uint16_t codeSegmentSelectorOffset,
+                                                            void (*handler)(),
                                                             ackeros::common::uint8_t DescriptorPrivilegeLevel,
                                                             ackeros::common::uint8_t DescriptorType);
                 
@@ -95,7 +97,7 @@ namespace ackeros {
                 static ackeros::common::uint32_t HandleInterrupt(ackeros::common::uint8_t interrupt,
                                                                  ackeros::common::uint32_t esp);
 
-                static ackeros::common::uint32_t DoHandleInterrupt(ackeros::common::uint8_t interrupt,
+                ackeros::common::uint32_t DoHandleInterrupt(ackeros::common::uint8_t interrupt,
                                                                  ackeros::common::uint32_t esp);
                 
             public:

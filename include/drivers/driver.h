@@ -19,6 +19,7 @@ namespace ackeros {
                 int numDrivers;
 
             public:
+                DriverManager();
                 void AddDriver(Driver*);
                 void ActivateAll();
         };

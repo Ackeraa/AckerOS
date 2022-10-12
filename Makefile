@@ -4,14 +4,12 @@ LDPARAMS = -melf_i386
 
 objects = obj/loader.o \
 		  obj/gdt.o \
-		  obj/port.o \
 		  obj/hardware/port.o \
 		  obj/hardware/interruptstubs.o \
 		  obj/hardware/interrupts.o \
 		  obj/drivers/driver.o \
 		  obj/drivers/keyboard.o \
 		  obj/drivers/mouse.o \
-
           obj/kernel.o
 
 run: kernel.iso
