@@ -67,7 +67,6 @@ class PrintfKeyboardEventHandler : public KeyboardEventHandler {
             char* foo = " ";
             foo[0] = c;
             printf(foo);
-            printf("fuck");
         }
 };
 

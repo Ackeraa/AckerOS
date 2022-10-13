@@ -15,7 +15,7 @@ namespace ackeros {
 
         class DriverManager {
            public:
-                Driver* drivers[265];
+                Driver* drivers[256];
                 int numDrivers;
 
             public:
