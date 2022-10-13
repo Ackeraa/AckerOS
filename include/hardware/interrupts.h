@@ -99,6 +99,11 @@ namespace ackeros {
 
                 ackeros::common::uint32_t DoHandleInterrupt(ackeros::common::uint8_t interrupt,
                                                                  ackeros::common::uint32_t esp);
+
+                Port8BitSlow picMasterCmdPort;
+                Port8BitSlow picMasterDataPort;
+                Port8BitSlow picSlaveCmdPort;
+                Port8BitSlow picSlaveDataPort;
                 
             public:
                 InterruptManager(ackeros::common::uint16_t hardwareInterruptOffset, 

@@ -2,7 +2,7 @@
 #define ACKEROS_HARDWARE_PCI_H_
 
 #include <hardware/port.h>
-#include <drivers/drivers.h>
+#include <drivers/driver.h>
 #include <common/types.h>
 #include <hardware/interrupts.h>
 
@@ -30,7 +30,7 @@ namespace ackeros {
                 ackeros::common::uint16_t device;
                 ackeros::common::uint16_t function;
 
-                ackeros::common::uint16_t vender_id;
+                ackeros::common::uint16_t vendor_id;
                 ackeros::common::uint16_t device_id;
 
                 ackeros::common::uint8_t  class_id;
@@ -45,7 +45,7 @@ namespace ackeros {
 
         class PCIController {
             Port32Bit dataPort;
-            Port32Bit commandPort;
+            Port32Bit cmdPort;
 
             public:
                 PCIController();
@@ -54,14 +54,14 @@ namespace ackeros {
                 ackeros::common::uint32_t Read(ackeros::common::uint16_t bus, 
                                                ackeros::common::uint16_t device,
                                                ackeros::common::uint16_t function,
-                                               ackeros::common::uint32_t, registeroffset);
+                                               ackeros::common::uint32_t registeroffset);
                 void Write (ackeros::common::uint16_t bus, 
                             ackeros::common::uint16_t device,
                             ackeros::common::uint16_t function,
-                            ackeros::common::uint32_t, registeroffset,
-                            ackeros::common::uint32_t, value)
-                bool DeviceHasFunctions(acker::common::uint16_t bus,
-                                        ackeros::common::uint16_t device)
+                            ackeros::common::uint32_t registeroffset,
+                            ackeros::common::uint32_t value);
+                bool DeviceHasFunctions(ackeros::common::uint16_t bus,
+                                        ackeros::common::uint16_t device);
                 
 
                 void SelectDrivers(ackeros::drivers::DriverManager* driverManageer,
@@ -71,7 +71,7 @@ namespace ackeros {
                 PCIDeviceDescriptor GetDeviceDescriptor(ackeros::common::uint16_t bus,
                                                         ackeros::common::uint16_t device,
                                                         ackeros::common::uint16_t function);
-                BaseAddressRegister GetBaseAddressRegister(ackeros::commom::uint16_t bus,
+                BaseAddressRegister GetBaseAddressRegister(ackeros::common::uint16_t bus,
                                                            ackeros::common::uint16_t device,
                                                            ackeros::common::uint16_t function,
                                                            ackeros::common::uint16_t bar);

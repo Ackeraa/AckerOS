@@ -8,7 +8,7 @@ void printfHex(uint8_t);
 
 InterruptHandler::InterruptHandler(InterruptManager* interruptManager,
                                    uint8_t InterruptNumber) {
-    this->InterruptNumber == InterruptNumber;
+    this->InterruptNumber = InterruptNumber;
     this->interruptManager = interruptManager;
     interruptManager->handlers[InterruptNumber] = this;
 }
@@ -42,7 +42,12 @@ void InterruptManager::SetInterruptDescriptorTableEntry(uint8_t interrupt,
 }
 
 InterruptManager::InterruptManager(uint16_t hardwareInterruptOffset,
-                                   GlobalDescriptorTable* gdt) {
+        GlobalDescriptorTable* gdt) 
+    : picMasterCmdPort(0x20),
+    picMasterDataPort(0x21),
+    picSlaveCmdPort(0xA0),
+    picSlaveDataPort(0xA1) {
+
     this->hardwareInterruptOffset = hardwareInterruptOffset;
     uint32_t CodeSegment = gdt->CodeSegmentSelector();
 
@@ -95,6 +100,20 @@ InterruptManager::InterruptManager(uint16_t hardwareInterruptOffset,
 
     SetInterruptDescriptorTableEntry(0x80, CodeSegment, &HandleInterruptRequest0x80, 0, IDT_INTERRUPT_GATE);
 
+    picMasterCmdPort.Write(0x11);
+    picSlaveCmdPort.Write(0x11);
+
+    picMasterDataPort.Write(hardwareInterruptOffset);
+    picSlaveDataPort.Write(hardwareInterruptOffset + 8);
+
+    picMasterDataPort.Write(0x04);
+    picSlaveDataPort.Write(0x02);
+
+    picMasterDataPort.Write(0x01);
+    picSlaveDataPort.Write(0x01);
+
+    picMasterDataPort.Write(0x00);
+    picSlaveDataPort.Write(0x00);
 
     InterruptDescriptorTablePointer idt_pointer;
     idt_pointer.size = 256 * sizeof(GateDescriptor) - 1;
@@ -140,7 +159,9 @@ uint32_t InterruptManager::DoHandleInterrupt(uint8_t interrupt, uint32_t esp) {
     } 
 
     if (hardwareInterruptOffset <= interrupt && interrupt < hardwareInterruptOffset + 16) {
-
+        picMasterCmdPort.Write(0x20);
+        if (hardwareInterruptOffset + 8 <= interrupt) 
+            picSlaveCmdPort.Write(0x20);
     }
 
     return esp;

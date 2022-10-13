@@ -10,15 +10,15 @@ PCIDeviceDescriptor::PCIDeviceDescriptor() {
 PCIDeviceDescriptor::~PCIDeviceDescriptor() {
 }
 
-PCIControllor::PCIControllor()
+PCIController::PCIController()
     : dataPort(0xCFC),
     cmdPort(0xCF8) {
 }
 
-PCIControllor::~PCIControllor() {
+PCIController::~PCIController() {
 }
 
-uint32_t PCIControllor::Read(uint16_t bus, uint16_t device, uint16_t function,
+uint32_t PCIController::Read(uint16_t bus, uint16_t device, uint16_t function,
                              uint32_t registeroffset) {
     uint32_t id = 
         0x1 << 31
@@ -32,7 +32,7 @@ uint32_t PCIControllor::Read(uint16_t bus, uint16_t device, uint16_t function,
     return result >> (8 * (registeroffset % 4));
 }
 
-void PCIControllor::Write(uint16_t bus, uint16_t device, uint16_t function,
+void PCIController::Write(uint16_t bus, uint16_t device, uint16_t function,
                              uint32_t registeroffset, uint32_t value) {
 
     uint32_t id = 
@@ -45,14 +45,14 @@ void PCIControllor::Write(uint16_t bus, uint16_t device, uint16_t function,
     dataPort.Write(value);
 }
 
-bool PCIControllor::DeviceHasFunctions(uint16_t bus, uint16_t device) {
+bool PCIController::DeviceHasFunctions(uint16_t bus, uint16_t device) {
     return Read(bus, device, 0, 0x0E) & (1 << 7);
 }
 
 void printf(const char*);
 void printfHex(uint8_t);
 
-void PCIControllor::SelectDrivers(DriverManager* driverManager,
+void PCIController::SelectDrivers(DriverManager* driverManager,
                                   InterruptManager* interrupts) {
     for (int bus = 0; bus < 8; ++bus) {
         for (int device = 0; device < 32; ++device) {
@@ -60,10 +60,10 @@ void PCIControllor::SelectDrivers(DriverManager* driverManager,
             for (int function = 0; function < numFunctions; ++function) {
                 PCIDeviceDescriptor dev = GetDeviceDescriptor(bus, device, function);
 
-                if (dev.vender_id == 0x0000 || dev.vender_id == 0xFFFF)
+                if (dev.vendor_id == 0x0000 || dev.vendor_id == 0xFFFF)
                     continue;
 
-                for (int barNum = 0; barNum < numFunctions; ++barNum) {
+                for (int barNum = 0; barNum < 6; ++barNum) {
                     BaseAddressRegister bar = GetBaseAddressRegister(bus, device, function, barNum);
                     if (bar.address && (bar.type == InputOutput)) 
                         dev.portBase = (uint32_t)bar.address;
@@ -94,12 +94,12 @@ void PCIControllor::SelectDrivers(DriverManager* driverManager,
     }
 }
 
-BaseAddressRegister PCIControllor::GeetBaseAddressRegister(uint16_t bus, uint16_t device,
+BaseAddressRegister PCIController::GetBaseAddressRegister(uint16_t bus, uint16_t device,
                                                            uint16_t function, uint16_t bar) {
     BaseAddressRegister result;
 
     uint32_t headertype = Read(bus, device, function, 0x0E) & 0x7F;
-    int maxBARs = 6 - (4*headertype);
+    int maxBARs = 6 - (4 * headertype);
     if (bar >= maxBARs)
         return result;
 
@@ -122,9 +122,9 @@ BaseAddressRegister PCIControllor::GeetBaseAddressRegister(uint16_t bus, uint16_
     return result;
 }
 
-Driver* PCIControllor::GetDriver(PCIDeviceDescriptor dev, InterruptManager* interrupts) {
+Driver* PCIController::GetDriver(PCIDeviceDescriptor dev, InterruptManager* interrupts) {
     Driver* driver = 0;
-    switch (dev.vender_id) {
+    switch (dev.vendor_id) {
         case 0x1022: // AMD 
             switch (dev.device_id) {
                 case 0x2000: //am79c973
@@ -149,7 +149,7 @@ Driver* PCIControllor::GetDriver(PCIDeviceDescriptor dev, InterruptManager* inte
     return driver;
 }
 
-PCIDeviceDescriptor PCIControllor::GetDeviceDescriptor(uint16_t bus, uint16_t device,
+PCIDeviceDescriptor PCIController::GetDeviceDescriptor(uint16_t bus, uint16_t device,
                                                        uint16_t function) {
     PCIDeviceDescriptor result;
 
@@ -157,7 +157,7 @@ PCIDeviceDescriptor PCIControllor::GetDeviceDescriptor(uint16_t bus, uint16_t de
     result.device = device;
     result.function = function;
 
-    result.vender_id = Read(bus, device, function, 0x00);
+    result.vendor_id = Read(bus, device, function, 0x00);
     result.device_id = Read(bus, device, function, 0x02);
 
     result.class_id = Read(bus, device, function, 0x0b);

@@ -1,8 +1,8 @@
 #include <drivers/keyboard.h>
 
 using namespace ackeros::common;
-using namespace acker::drivers;
-using namespace acker::hardware;
+using namespace ackeros::drivers;
+using namespace ackeros::hardware;
 
 KeyboardEventHandler::KeyboardEventHandler() {
 }
@@ -30,11 +30,12 @@ void KeyboardDriver::Activate() {
     cmdport.Write(0x20); // command 0x20 = read controller command byte
     uint8_t status = (dataport.Read() | 1) & ~0x10;
     cmdport.Write(0x60); // command 0x60 = set controller command byte
+    dataport.Write(status);
     dataport.Write(0xf4);
 }
 
 uint32_t KeyboardDriver::HandleInterrupt(uint32_t esp) {
-    uint8_8 key == dataport.Read();
+    uint8_t key = dataport.Read();
 
     if (handler == 0) 
         return esp;

@@ -16,7 +16,7 @@ namespace ackeros {
                 virtual void OnKeyUp(char);
         };
 
-        class keyboardDriver : public ackeros::hardware::InterruptHandler, public Driver {
+        class KeyboardDriver : public ackeros::hardware::InterruptHandler, public Driver {
             ackeros::hardware::Port8Bit dataport;
             ackeros::hardware::Port8Bit cmdport;
 

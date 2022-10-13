@@ -13,12 +13,12 @@ namespace ackeros {
                 MouseEventHandler();
 
                 virtual void OnActivate();
-                virtual void OnMouseDown();
-                virtual void OnMouseUp();
+                virtual void OnMouseDown(ackeros::common::uint8_t button);
+                virtual void OnMouseUp(ackeros::common::uint8_t button);
                 virtual void OnMouseMove(int x, int y);
         };
 
-        class MouseDriveer : public ackeros::hardware::InterruptHandler, public Driver {
+        class MouseDriver : public ackeros::hardware::InterruptHandler, public Driver {
             ackeros::hardware::Port8Bit dataport;
             ackeros::hardware::Port8Bit cmdport;
             ackeros::common::uint8_t buffer[3];
@@ -31,7 +31,7 @@ namespace ackeros {
                 MouseDriver(ackeros::hardware::InterruptManager* manager,
                             MouseEventHandler* handler);
                 ~MouseDriver();
-                virtual acker::common::uint32_t HandleInterrupt(ackeros::common::uint32_t esp);
+                virtual ackeros::common::uint32_t HandleInterrupt(ackeros::common::uint32_t esp);
                 virtual void Activate();
         };
     }
